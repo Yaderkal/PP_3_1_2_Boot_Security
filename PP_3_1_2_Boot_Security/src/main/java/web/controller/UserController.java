@@ -37,11 +37,7 @@ public class UserController {
         return "user-form";
     }
 
-    @PostMapping
-    public String createUser(@ModelAttribute User user, Model model) {
-        userService.saveUser(user.getName(), user.getMiddleName(), user.getSurName(), user.getMail());
-        return "redirect:/users";
-    }
+
 
     @GetMapping("/edit")
     public String showEditForm(@RequestParam("id") Long id, Model model) {
@@ -50,11 +46,6 @@ public class UserController {
         return "user-edit";
     }
 
-    @PostMapping("/update")
-    public String updateUser(@ModelAttribute User user, Model model) {
-        userService.updateUser(user.getId(), user.getName(), user.getMiddleName(), user.getSurName(), user.getMail());
-        return "redirect:/users";
-    }
     @GetMapping("/test")
     @ResponseBody
     public String test() {
