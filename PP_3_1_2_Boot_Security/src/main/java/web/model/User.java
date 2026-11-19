@@ -1,13 +1,18 @@
 package web.model;
 
-import javax.persistence.*;
-import java.io.Serializable;
-import java.util.Objects;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import javax.persistence.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
-public class User implements Serializable {
+public class  User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,58 +27,88 @@ public class User implements Serializable {
     @Column(name = "sur_name")
     private String surName;
 
-    @Column(name = "mail")
+    @Column(name = "mail", unique = true, nullable = false)
     private String mail;
+
+    @Column(name = "password", nullable = false)
+    private String password;
+
+    @ManyToMany(fetch = FetchType.EAGER)   // ← для UserDetails роли нужны сразу
+    @JoinTable(
+            name = "users_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private Set<Role> roles = new HashSet<>();
 
     public User() {
     }
 
-    public User(String name, String middleName, String surName, String mail) {
+    public User(String name, String middleName, String surName,
+                String mail, String password, Set<Role> roles) {
         this.name = name;
         this.middleName = middleName;
         this.surName = surName;
         this.mail = mail;
+        this.password = password;
+        this.roles = roles != null ? roles : new HashSet<>();
     }
 
-    public Long getId() {
-        return id;
+    // ---------- Поля сущности ----------
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+
+    public String getMiddleName() { return middleName; }
+    public void setMiddleName(String middleName) { this.middleName = middleName; }
+
+    public String getSurName() { return surName; }
+    public void setSurName(String surName) { this.surName = surName; }
+
+    public String getMail() { return mail; }
+    public void setMail(String mail) { this.mail = mail; }
+
+    public Set<Role> getRoles() { return roles; }
+    public void setRoles(Set<Role> roles) { this.roles = roles; }
+
+    // ---------- Реализация UserDetails ----------
+
+    @Override
+    public String getUsername() {
+        return mail;   // логин = email
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    @Override
+    public String getPassword() {
+        return password;
     }
 
-    public String getName() {
-        return name;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    /**
+     * Role реализует GrantedAuthority, поэтому просто возвращаем Set<Role>.
+     * Если roles == null — пустая коллекция, чтобы Spring Security не упал.
+     */
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return roles != null ? roles : Collections.emptySet();
     }
 
-    public String getMiddleName() {  // ← getMiddleName()
-        return middleName;
-    }
+    @Override
+    public boolean isAccountNonExpired()  { return true; }
+    @Override
+    public boolean isAccountNonLocked()   { return true; }
+    @Override
+    public boolean isCredentialsNonExpired() { return true; }
+    @Override
+    public boolean isEnabled()            { return true; }
 
-    public void setMiddleName(String middleName) {  // ← setMiddleName()
-        this.middleName = middleName;
-    }
-
-    public String getSurName() {  // ← getSurName()
-        return surName;
-    }
-
-    public void setSurName(String surName) {  // ← setSurName()
-        this.surName = surName;
-    }
-
-    public String getMail() {
-        return mail;
-    }
-
-    public void setMail(String mail) {
-        this.mail = mail;
-    }
+    // ---------- equals / hashCode ----------
 
     @Override
     public boolean equals(Object o) {
@@ -84,11 +119,12 @@ public class User implements Serializable {
                 Objects.equals(name, user.name) &&
                 Objects.equals(middleName, user.middleName) &&
                 Objects.equals(surName, user.surName) &&
-                Objects.equals(mail, user.mail);
+                Objects.equals(mail, user.mail) &&
+                Objects.equals(password, user.password);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, middleName, surName, mail);
+        return Objects.hash(id, name, middleName, surName, mail, password);
     }
 }

@@ -32,7 +32,7 @@ public class AdminController {
 
     @PostMapping
     public String createUser(@ModelAttribute User user, Model model) {
-        userService.saveUser(user.getName(), user.getMiddleName(), user.getSurName(), user.getMail());
+        userService.saveUser( user.getName(), user.getMiddleName(), user.getSurName(), user.getMail(), user.getPassword(), user.getRoles());
         return "redirect:/users";
     }
 
@@ -45,7 +45,7 @@ public class AdminController {
 
     @PostMapping("/admin/update")
     public String updateUser(@ModelAttribute User user, Model model) {
-        userService.updateUser(user.getId(), user.getName(), user.getMiddleName(), user.getSurName(), user.getMail());
+        userService.updateUser(user.getId(), user.getName(), user.getMiddleName(), user.getSurName(), user.getMail(), user.getPassword(), user.getRoles());
         return "redirect:/users";
     }
 }

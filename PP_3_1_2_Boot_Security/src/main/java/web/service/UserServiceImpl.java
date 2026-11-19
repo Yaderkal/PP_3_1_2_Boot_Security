@@ -1,72 +1,85 @@
 package web.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import web.DAO.UserDAO;
+import web.model.Role;
 import web.model.User;
+import web.repository.UserRepository;
 
-import java.sql.SQLException;
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.Set;
 
 @Service
+@Transactional
 public class UserServiceImpl implements UserService {
 
-    private final UserDAO userDAO;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    public UserServiceImpl(UserDAO userDAO) {
-        this.userDAO = userDAO;
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
-
-    @Transactional
+    /** аналог saveUser(...) из DAO */
     @Override
-    public void saveUser(String name, String middleName, String surName, String mail) {
-        try {
-            userDAO.saveUser(name, middleName, surName, mail);
-        } catch (SQLException e) {
-            System.out.println("ошибка при добавлении пользователя");
-            throw new RuntimeException(e);
-        }
+    public void saveUser(String name, String middleName, String surName,
+                         String mail, String rawPassword, Set<Role> roles) {
+        User user = new User();
+        user.setName(name);
+        user.setMiddleName(middleName);
+        user.setSurName(surName);
+        user.setMail(mail);
+        user.setPassword(passwordEncoder.encode(rawPassword)); // ← хешируем здесь
+        user.setRoles(roles);
+        userRepository.save(user);
     }
+
+    /** аналог getUserById(...) */
     @Transactional(readOnly = true)
     @Override
-    public User getUserById(Long id) {
-        User user = userDAO.getUserById(id);
-        if (user == null) {
-            throw new RuntimeException("Пользователь с id=" + id + " не найден");
-        }
-        return user;
+    public User getUserById(long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Пользователь с id=" + id + " не найден"));
     }
 
-    @Transactional
+    /** аналог getAllUsers() */
+    @Override
+    @Transactional(readOnly = true)
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
+    /** аналог removeUserById(...) */
     @Override
     public void removeUserById(long id) {
-        User user = userDAO.getUserById(id);
-        if (user == null) {
-            throw new RuntimeException("Пользователь с id=" + id + " не найден");
+        if (!userRepository.existsById(id)) {
+            throw new EntityNotFoundException("Пользователь с id=" + id + " не найден");
         }
-        userDAO.removeUserById(id);
-    }
-    @Transactional(readOnly = true)
-    @Override
-    public List<User> getAllUsers()  {
-        try {
-            return userDAO.getAllUsers();
-        } catch (SQLException e) {
-            System.out.println("Ошибка при получении всех пользователей");
-            throw new RuntimeException(e);
-        }
+        userRepository.deleteById(id);
     }
 
-    @Transactional
+    /** аналог updateUser(...) */
     @Override
-    public void updateUser(Long id, String name, String middleName, String surName, String mail) {
-        try {
-            userDAO.updateUser(id, name, middleName, surName, mail);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+    public void updateUser(Long id, String name, String middleName,
+                           String surName, String mail, String rawPassword,
+                           Set<Role> roles) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Пользователь с id=" + id + " не найден"));
+        user.setName(name);
+        user.setMiddleName(middleName);
+        user.setSurName(surName);
+        user.setMail(mail);
+        if (rawPassword != null && !rawPassword.trim().isEmpty()) {
+            user.setPassword(passwordEncoder.encode(rawPassword));
         }
+        if (roles != null) {
+            user.setRoles(roles);
+        }
+        // save() не обязателен в @Transactional-методе:
+        // Hibernate сделает dirty checking и flush при коммите.
+        // Но явный save() не вредит и делает намерение очевидным.
+        userRepository.save(user);
     }
 }
