@@ -22,14 +22,14 @@ public class Main {
     public void openBrowser() {
         try {
             if (Desktop.isDesktopSupported()) {
-                Desktop.getDesktop().browse(new URI("http://localhost:8080/users"));
-                System.out.println("Браузер открыт по адресу: http://localhost:8080/users");
+                Desktop.getDesktop().browse(new URI("http://localhost:8080/login"));
+                System.out.println("Браузер открыт по адресу: http://localhost:8080/login");
             } else {
-                System.out.println("Перейдите по ссылке: http://localhost:8080/users");
+                System.out.println("Перейдите по ссылке: http://localhost:8080/login");
             }
         } catch (Exception e) {
             System.err.println("Не удалось открыть браузер автоматически: " + e.getMessage());
-            System.out.println("Перейдите вручную по ссылке: http://localhost:8080/users");
+            System.out.println("Перейдите вручную по ссылке: http://localhost:8080/login");
         }
     }
 }

@@ -12,22 +12,17 @@
             padding: 20px;
         }
         .container {
-            max-width: 1200px;
+            max-width: 600px;
             margin: 0 auto;
             background: white;
-            border-radius: 30px;
-            padding: 60px;
-            box-shadow: 0 40px 120px rgba(0,0,0,0.3);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
         }
         h1 { color: #333; margin-bottom: 30px; text-align: center; }
         .form-group { margin-bottom: 20px; }
-        label {
-            display: block;
-            margin-bottom: 5px;
-            color: #333;
-            font-weight: 600;
-        }
-        input {
+        label { display: block; margin-bottom: 5px; color: #333; font-weight: 600; }
+        input[type=text], input[type=email], input[type=password] {
             width: 100%;
             padding: 10px;
             border: 2px solid #e0e0e0;
@@ -35,9 +30,18 @@
             font-size: 14px;
             transition: border-color 0.3s;
         }
-        input:focus {
-            outline: none;
-            border-color: #667eea;
+        input:focus { outline: none; border-color: #667eea; }
+        .checkbox-group {
+            display: flex;
+            gap: 20px;
+            padding: 10px 0;
+        }
+        .checkbox-group label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: normal;
+            cursor: pointer;
         }
         .btn {
             display: inline-block;
@@ -51,11 +55,7 @@
             transition: all 0.3s;
             margin: 5px;
         }
-        .btn:hover {
-            background: #5566d6;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
+        .btn:hover { background: #5566d6; transform: translateY(-2px); }
         .btn-secondary { background: #6c757d; }
         .btn-secondary:hover { background: #5a6268; }
         .btn-group {
@@ -68,32 +68,49 @@
 </head>
 <body>
 <div class="container">
-    <h1>♿♿♿♿♿ Создание нового пользователя ♿♿♿♿♿</h1>
+    <h1>Создание нового пользователя</h1>
 
-    <form th:action="@{/users}" method="post">
+    <form th:action="@{/admin/create}" method="post">
         <div class="form-group">
             <label for="name">Имя:</label>
-            <input type="text" id="name" th:value="${user.name}" name="name" placeholder="Введите имя"/>
+            <input type="text" id="name" name="name" placeholder="Введите имя" required/>
         </div>
 
         <div class="form-group">
             <label for="middleName">Отчество:</label>
-            <input type="text" id="middleName" th:value="${user.middleName}" name="middleName" placeholder="Введите отчество"/>
+            <input type="text" id="middleName" name="middleName" placeholder="Введите отчество"/>
         </div>
 
         <div class="form-group">
             <label for="surName">Фамилия:</label>
-            <input type="text" id="surName" th:value="${user.surName}" name="surName" placeholder="Введите фамилию"/>
+            <input type="text" id="surName" name="surName" placeholder="Введите фамилию"/>
         </div>
 
         <div class="form-group">
             <label for="mail">Email:</label>
-            <input type="email" id="mail" th:value="${user.mail}" name="mail" placeholder="Введите email формата name@domain.domain"/>
+            <input type="email" id="mail" name="mail" placeholder="name@domain.com" required/>
+        </div>
+
+        <div class="form-group">
+            <label for="password">Пароль:</label>
+            <input type="password" id="password" name="password" placeholder="Введите пароль" required/>
+        </div>
+
+        <div class="form-group">
+            <label>Роли:</label>
+            <div class="checkbox-group">
+                <label>
+                    <input type="checkbox" name="roles" value="1"/> ROLE_USER
+                </label>
+                <label>
+                    <input type="checkbox" name="roles" value="2"/> ROLE_ADMIN
+                </label>
+            </div>
         </div>
 
         <div class="btn-group">
-            <button type="submit" class="btn">♿ Сохранить</button>
-            <a href="/users" class="btn btn-secondary">↩️ Отмена</a>
+            <button type="submit" class="btn">Сохранить</button>
+            <a th:href="@{/admin}" class="btn btn-secondary">Отмена</a>
         </div>
     </form>
 </div>

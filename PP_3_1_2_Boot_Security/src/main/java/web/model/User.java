@@ -90,6 +90,7 @@ public class  User implements UserDetails {
         this.password = password;
     }
 
+
     /**
      * Role реализует GrantedAuthority, поэтому просто возвращаем Set<Role>.
      * Если roles == null — пустая коллекция, чтобы Spring Security не упал.
