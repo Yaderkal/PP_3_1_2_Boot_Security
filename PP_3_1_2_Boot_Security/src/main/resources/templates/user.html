@@ -23,7 +23,9 @@
             text-align: center;
             max-width: 500px;
             width: 100%;
+
         }
+
         h1 { color: #333; margin-bottom: 20px; }
         .info { color: #555; font-size: 16px; margin-bottom: 10px; }
         .info strong { color: #667eea; }
@@ -54,7 +56,10 @@
         </strong>
     </p>
 
-    <a th:href="@{/logout}" class="btn">Выйти</a>
+    <form th:action="@{/logout}" method="post">
+        <button type="submit" class="btn">Выйти</button>
+    </form>
 </div>
+<div th:replace="logout :: logoutBar"></div>
 </body>
 </html>
