@@ -25,7 +25,9 @@ public class Main {
                 Desktop.getDesktop().browse(new URI("http://localhost:8080/login"));
                 System.out.println("Браузер открыт по адресу: http://localhost:8080/login");
             } else {
-                System.out.println("Перейдите по ссылке: http://localhost:8080/login");
+                System.out.println("Перейдите по ссылке: http://localhost:8080/login" );
+                System.out.println("Дефолтный админ admin@example.com");
+                System.out.println("                admin");
             }
         } catch (Exception e) {
             System.err.println("Не удалось открыть браузер автоматически: " + e.getMessage());
