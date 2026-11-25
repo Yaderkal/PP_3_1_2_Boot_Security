@@ -23,7 +23,6 @@ public class UserServiceImpl implements UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    /** аналог saveUser(...) из DAO */
     @Override
     public void saveUser(String name, String middleName, String surName,
                          String mail, String rawPassword, Set<Role> roles) {
@@ -37,7 +36,6 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
-    /** аналог getUserById(...) */
     @Transactional(readOnly = true)
     @Override
     public User getUserById(long id) {
@@ -45,13 +43,11 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new EntityNotFoundException("Пользователь с id=" + id + " не найден"));
     }
 
-    /** аналог getAllUsers() */
     @Override
     @Transactional(readOnly = true)
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
-    /** аналог removeUserById(...) */
     @Override
     public void removeUserById(long id) {
         if (!userRepository.existsById(id)) {
@@ -60,7 +56,6 @@ public class UserServiceImpl implements UserService {
         userRepository.deleteById(id);
     }
 
-    /** аналог updateUser(...) */
     @Override
     public void updateUser(Long id, String name, String middleName,
                            String surName, String mail, String rawPassword,
@@ -77,9 +72,6 @@ public class UserServiceImpl implements UserService {
         if (roles != null) {
             user.setRoles(roles);
         }
-        // save() не обязателен в @Transactional-методе:
-        // Hibernate сделает dirty checking и flush при коммите.
-        // Но явный save() не вредит и делает намерение очевидным.
         userRepository.save(user);
     }
 }

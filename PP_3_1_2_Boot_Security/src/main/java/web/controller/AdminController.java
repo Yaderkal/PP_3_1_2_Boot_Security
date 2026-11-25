@@ -27,7 +27,7 @@ public class AdminController {
     @GetMapping("/admin/new")
     public String showCreateForm(Model model) {
         model.addAttribute("user", new User());
-        model.addAttribute("allRoles", roleRepository.findAll());   // если используете th:each
+        model.addAttribute("allRoles", roleRepository.findAll());
         return "user-form";
     }
 

@@ -4,8 +4,6 @@ import org.springframework.stereotype.Service;
 import web.model.Role;
 import web.repository.RoleRepository;
 
-import javax.annotation.PostConstruct;
-
 @Service
 public class RoleService {
 

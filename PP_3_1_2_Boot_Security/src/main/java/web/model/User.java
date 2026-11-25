@@ -33,7 +33,7 @@ public class  User implements UserDetails {
     @Column(name = "password", nullable = false)
     private String password;
 
-    @ManyToMany(fetch = FetchType.EAGER)   // ← для UserDetails роли нужны сразу
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -54,8 +54,6 @@ public class  User implements UserDetails {
         this.roles = roles != null ? roles : new HashSet<>();
     }
 
-    // ---------- Поля сущности ----------
-
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -74,8 +72,6 @@ public class  User implements UserDetails {
     public Set<Role> getRoles() { return roles; }
     public void setRoles(Set<Role> roles) { this.roles = roles; }
 
-    // ---------- Реализация UserDetails ----------
-
     @Override
     public String getUsername() {
         return mail;   // логин = email
@@ -90,11 +86,6 @@ public class  User implements UserDetails {
         this.password = password;
     }
 
-
-    /**
-     * Role реализует GrantedAuthority, поэтому просто возвращаем Set<Role>.
-     * Если roles == null — пустая коллекция, чтобы Spring Security не упал.
-     */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles != null ? roles : Collections.emptySet();
@@ -108,8 +99,6 @@ public class  User implements UserDetails {
     public boolean isCredentialsNonExpired() { return true; }
     @Override
     public boolean isEnabled()            { return true; }
-
-    // ---------- equals / hashCode ----------
 
     @Override
     public boolean equals(Object o) {

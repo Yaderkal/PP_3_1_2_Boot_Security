@@ -30,7 +30,7 @@ public class DataInitializer implements CommandLineRunner {
         Role adminRole = createRoleIfNotExists("ROLE_ADMIN");
         Role userRole  = createRoleIfNotExists("ROLE_USER");
 
-        // (опционально) создать дефолтного админа
+        // дефолтный админ
         if (userRepository.findByMail("admin@example.com").isEmpty()) {
             User admin = new User(
                     "Admin", "Adminovich", "Adminov",

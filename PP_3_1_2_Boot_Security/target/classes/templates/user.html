@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Домашняя страница</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            border-radius: 15px;
+            padding: 50px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+
+        }
+
+        h1 { color: #333; margin-bottom: 20px; }
+        .info { color: #555; font-size: 16px; margin-bottom: 10px; }
+        .info strong { color: #667eea; }
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: #dc3545;
+            color: white;
+            text-decoration: none;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s;
+            margin-top: 25px;
+        }
+        .btn:hover { background: #c82333; transform: translateY(-2px); }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Добро пожаловать!</h1>
+    <p class="info">Вы вошли как: <strong th:text="${username}">user@example.com</strong></p>
+    <p class="info">
+        Ваши роли:
+        <strong th:each="role, stat : ${roles}">
+            <span th:text="${role.authority}">ROLE_USER</span><span th:if="${!stat.last}">, </span>
+        </strong>
+    </p>
+
+    <form th:action="@{/logout}" method="post">
+        <button type="submit" class="btn">Выйти</button>
+    </form>
+</div>
+<div th:replace="logout :: logoutBar"></div>
+</body>
+</html>
