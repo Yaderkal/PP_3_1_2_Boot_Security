@@ -8,44 +8,50 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(0deg, #ffa500 0%, #ffffff 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 20px;
         }
         .container {
             background: white;
             border-radius: 15px;
-            padding: 50px;
+            padding: 40px;
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            text-align: center;
-            max-width: 500px;
             width: 100%;
-
+            max-width: 400px;
         }
-
-        h1 { color: #333; margin-bottom: 20px; }
-        .info { color: #555; font-size: 16px; margin-bottom: 10px; }
-        .info strong { color: #667eea; }
+        h1 { color: #333; margin-bottom: 30px; text-align: center; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 5px; color: #333; font-weight: 600; }
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        input:focus { outline: none; border-color: #667eea; }
         .btn {
-            display: inline-block;
-            padding: 12px 30px;
-            background: #dc3545;
+            width: 100%;
+            padding: 12px;
+            background: #667eea;
             color: white;
-            text-decoration: none;
             border: none;
             border-radius: 5px;
             cursor: pointer;
             font-size: 16px;
             transition: all 0.3s;
-            margin-top: 25px;
         }
-        .btn:hover { background: #c82333; transform: translateY(-2px); }
+        .btn:hover { background: #5566d6; }
+        .error { color: #dc3545; text-align: center; margin-bottom: 15px; }
+        .logout { color: #28a745; text-align: center; margin-bottom: 15px; }
     </style>
 </head>
 <body>
+
 <div class="container">
     <h1>Добро пожаловать!</h1>
     <p class="info">Вы вошли как: <strong th:text="${username}">user@example.com</strong></p>
@@ -60,6 +66,5 @@
         <button type="submit" class="btn">Выйти</button>
     </form>
 </div>
-<div th:replace="logout :: logoutBar"></div>
 </body>
 </html>

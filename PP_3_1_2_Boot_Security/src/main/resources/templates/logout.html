@@ -1,12 +1,13 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<body>
-<div th:fragment="logoutBar" class="logout-bar">
-    <span>Вы вошли как: <strong sec:authentication="name"></strong></span>
-    <form th:action="@{/logout}" method="post" style="display:inline">
-        <button type="submit" class="logout-btn">Выйти</button>
+<div th:fragment="logoutBar"
+     class="d-flex justify-content-end align-items-center gap-3 mb-3 p-2 bg-white rounded shadow-sm">
+    <span class="text-muted">
+        Вы вошли как: <strong sec:authentication="name"></strong>
+        <span class="ms-2">| Роли:</span>
+        <span class="badge bg-primary ms-1"
+              th:each="auth : ${#authentication.authorities}"
+              th:text="${#strings.replace(auth.authority, 'ROLE_', '')}">USER</span>
+    </span>
+    <form th:action="@{/logout}" method="post" class="m-0">
+        <button type="submit" class="btn btn-sm btn-danger">Выйти</button>
     </form>
 </div>
-</body>
-</html>

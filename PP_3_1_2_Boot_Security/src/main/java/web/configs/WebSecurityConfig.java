@@ -36,7 +36,7 @@ public class WebSecurityConfig {
                 .and()
                 .formLogin()
                 .loginPage("/login")
-                .successHandler(successUserHandler)   // ← используем ваш хендлер
+                .successHandler(successUserHandler)
                 .permitAll()
                 .and()
                 .logout()

@@ -32,7 +32,7 @@ public class UserServiceImpl implements UserService {
         user.setMiddleName(middleName);
         user.setSurName(surName);
         user.setMail(mail);
-        user.setPassword(passwordEncoder.encode(rawPassword)); // ← хешируем здесь
+        user.setPassword(passwordEncoder.encode(rawPassword));
         user.setRoles(roles);
         userRepository.save(user);
     }
@@ -77,9 +77,7 @@ public class UserServiceImpl implements UserService {
         if (roles != null) {
             user.setRoles(roles);
         }
-        // save() не обязателен в @Transactional-методе:
-        // Hibernate сделает dirty checking и flush при коммите.
-        // Но явный save() не вредит и делает намерение очевидным.
+
         userRepository.save(user);
     }
 }

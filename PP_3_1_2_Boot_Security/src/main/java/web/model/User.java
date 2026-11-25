@@ -33,7 +33,7 @@ public class  User implements UserDetails {
     @Column(name = "password", nullable = false)
     private String password;
 
-    @ManyToMany(fetch = FetchType.EAGER)   // ← для UserDetails роли нужны сразу
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -78,7 +78,7 @@ public class  User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return mail;   // логин = email
+        return mail;
     }
 
     @Override
@@ -108,8 +108,6 @@ public class  User implements UserDetails {
     public boolean isCredentialsNonExpired() { return true; }
     @Override
     public boolean isEnabled()            { return true; }
-
-    // ---------- equals / hashCode ----------
 
     @Override
     public boolean equals(Object o) {
