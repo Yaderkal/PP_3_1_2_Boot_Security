@@ -12,12 +12,14 @@
 </head>
 <body class="bg-light">
 
+<div th:replace="logout :: logoutBar"></div>
+
 <div class="container-fluid py-3 admin-layout">
     <div class="row g-3 h-100">
 
         <aside class="col-md-3 col-lg-2 d-flex">
             <div class="card shadow-sm w-100 d-flex flex-column">
-                <div class="list-group list-group-flush flex-grow-1" id="roleFilter">
+                <div class="list-group list-group-flush flex-grow-1">
                     <a th:href="@{/admin}" class="list-group-item list-group-item-action active">
                         Admin
                     </a>
@@ -29,8 +31,6 @@
         </aside>
 
         <main class="col-md-9 col-lg-10">
-
-            <div th:replace="logout :: logoutBar"></div>
 
             <h1 class="h3 mb-3">Админ-панель</h1>
 
@@ -65,8 +65,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr th:each="u : ${users}"
-                            th:attr="data-roles=${#strings.listJoin(u.roles.![name], ',')}">
+                        <tr th:each="u : ${users}">
                             <td th:text="${u.id}">1</td>
                             <td th:text="${u.name}">Иван</td>
                             <td th:text="${u.middleName}">Иванович</td>
@@ -92,18 +91,18 @@
                                 <button type="button"
                                         class="btn btn-sm btn-outline-danger btn-delete"
                                         data-bs-toggle="modal" data-bs-target="#deleteModal"
-                                        th:attr="data-id=${u.id}, data-name=${u.mail}">
+                                        th:attr="data-id=${u.id},
+                                                 data-name=${u.name},
+                                                 data-middle=${u.middleName},
+                                                 data-sur=${u.surName},
+                                                 data-mail=${u.mail},
+                                                 data-roles=${#strings.listJoin(u.roles.![name], ',')}">
                                     🗑
                                 </button>
                             </td>
                         </tr>
                         <tr th:if="${#lists.isEmpty(users)}">
                             <td colspan="7" class="text-center text-muted py-4">Пользователей пока нет</td>
-                        </tr>
-                        <tr id="emptyFilterRow" style="display:none;">
-                            <td colspan="7" class="text-center text-muted py-4">
-                                Нет пользователей с выбранной ролью
-                            </td>
                         </tr>
                         </tbody>
                     </table>
@@ -199,17 +198,50 @@
 </div>
 
 <div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <form th:action="@{/admin/delete}" method="post" id="deleteForm">
-                <div class="modal-header">
+                <div class="modal-header bg-danger text-white">
                     <h5 class="modal-title">Удаление пользователя</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
                     <input type="hidden" name="id" id="d-id"/>
-                    <p>Удалить пользователя <strong id="d-name"></strong>?</p>
-                    <p class="text-muted small mb-0">Действие необратимо.</p>
+
+                    <p class="mb-3">Вы собираетесь удалить пользователя. Проверьте данные:</p>
+
+                    <table class="table table-sm table-bordered align-middle mb-0">
+                        <tbody>
+                        <tr>
+                            <th class="w-25 bg-light">ID</th>
+                            <td id="d-id-cell"></td>
+                        </tr>
+                        <tr>
+                            <th class="bg-light">Имя</th>
+                            <td id="d-name-cell"></td>
+                        </tr>
+                        <tr>
+                            <th class="bg-light">Отчество</th>
+                            <td id="d-middle-cell"></td>
+                        </tr>
+                        <tr>
+                            <th class="bg-light">Фамилия</th>
+                            <td id="d-sur-cell"></td>
+                        </tr>
+                        <tr>
+                            <th class="bg-light">Email</th>
+                            <td id="d-mail-cell"></td>
+                        </tr>
+                        <tr>
+                            <th class="bg-light">Роли</th>
+                            <td id="d-roles-cell"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <p class="text-danger small mt-3 mb-0">
+                        ⚠️ Действие необратимо. Пользователь будет удалён без возможности восстановления.
+                    </p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
@@ -222,6 +254,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
+
     document.querySelectorAll('.btn-edit').forEach(function (btn) {
         btn.addEventListener('click', function () {
             document.getElementById('e-id').value     = btn.dataset.id;
@@ -237,37 +270,26 @@
         });
     });
 
+    // ===== Удаление =====
     document.querySelectorAll('.btn-delete').forEach(function (btn) {
         btn.addEventListener('click', function () {
             document.getElementById('d-id').value = btn.dataset.id;
-            document.getElementById('d-name').textContent = btn.dataset.name;
+
+            document.getElementById('d-id-cell').textContent     = btn.dataset.id     || '—';
+            document.getElementById('d-name-cell').textContent   = btn.dataset.name   || '—';
+            document.getElementById('d-middle-cell').textContent = btn.dataset.middle || '—';
+            document.getElementById('d-sur-cell').textContent    = btn.dataset.sur    || '—';
+            document.getElementById('d-mail-cell').textContent   = btn.dataset.mail   || '—';
+
+            var roles = (btn.dataset.roles || '')
+                .split(',')
+                .filter(Boolean)
+                .map(function (r) { return r.replace('ROLE_', ''); })
+                .join(', ');
+
+            document.getElementById('d-roles-cell').textContent = roles || '—';
         });
     });
-
-    var filterButtons = document.querySelectorAll('#roleFilter [data-role-filter]');
-    var rows          = document.querySelectorAll('#usersTable tbody tr[data-roles]');
-    var emptyRow      = document.getElementById('emptyFilterRow');
-
-    function applyFilter(role) {
-        var visible = 0;
-        rows.forEach(function (row) {
-            var roleList = (row.dataset.roles || '').split(',');
-            var show = (role === 'ALL') || roleList.includes(role);
-            row.style.display = show ? '' : 'none';
-            if (show) visible++;
-        });
-        emptyRow.style.display = visible === 0 ? '' : 'none';
-    }
-
-    filterButtons.forEach(function (btn) {
-        btn.addEventListener('click', function () {
-            filterButtons.forEach(function (b) { b.classList.remove('active'); });
-            btn.classList.add('active');
-            applyFilter(btn.dataset.roleFilter);
-        });
-    });
-
-    applyFilter('ALL');
 </script>
 </body>
 </html>
