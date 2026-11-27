@@ -18,16 +18,12 @@
         <aside class="col-md-3 col-lg-2 d-flex">
             <div class="card shadow-sm w-100 d-flex flex-column">
                 <div class="list-group list-group-flush flex-grow-1" id="roleFilter">
-                    <button type="button"
-                            class="list-group-item list-group-item-action active"
-                            data-role-filter="ALL">
+                    <a th:href="@{/admin}" class="list-group-item list-group-item-action active">
                         Admin
-                    </button>
-                    <button type="button"
-                            class="list-group-item list-group-item-action"
-                            data-role-filter="ROLE_USER">
+                    </a>
+                    <a th:href="@{/user}" class="list-group-item list-group-item-action">
                         User
-                    </button>
+                    </a>
                 </div>
             </div>
         </aside>

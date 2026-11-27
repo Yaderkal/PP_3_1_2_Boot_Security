@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<aside th:fragment="roleSidebar(active)" class="col-md-3 col-lg-2 d-flex">
+  <div class="card shadow-sm w-100 d-flex flex-column">
+    <div class="list-group list-group-flush flex-grow-1" id="roleFilter">
+
+      <a th:href="@{/admin}"
+         class="list-group-item list-group-item-action"
+         th:classappend="${active == 'ADMIN'} ? 'active'">
+        Admin
+      </a>
+
+      <a th:href="@{/user/home}"
+         class="list-group-item list-group-item-action"
+         th:classappend="${active == 'USER'} ? 'active'">
+        User
+      </a>
+
+    </div>
+  </div>
+</aside>
+
+</body>
+</html>
