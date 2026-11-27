@@ -10,16 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
+    @Query("SELECT u FROM User u LEFT JOIN FETCH u.roles WHERE u.mail = :mail")
+    Optional<User> findByMail(@Param("mail") String mail);
 
-    Optional<User> findUserByName(String name);
-
-    Optional<User> findByMail(String mail);
-
-    @Query("SELECT u FROM User u LEFT JOIN FETCH u.roles WHERE u.name = :name")
-    Optional<User> findByMailWithRoles(@Param("name") String name);
-
-    @Query("SELECT DISTINCT u FROM User u LEFT JOIN FETCH u.roles")
-    List<User> findAllWithRoles();
-
-    Optional<Object> findUserByMail(String mail);
 }
