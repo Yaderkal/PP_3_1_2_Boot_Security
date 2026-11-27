@@ -33,7 +33,7 @@ public class  User implements UserDetails {
     @Column(name = "password", nullable = false)
     private String password;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -54,7 +54,6 @@ public class  User implements UserDetails {
         this.roles = roles != null ? roles : new HashSet<>();
     }
 
-    // ---------- Поля сущности ----------
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -73,8 +72,6 @@ public class  User implements UserDetails {
 
     public Set<Role> getRoles() { return roles; }
     public void setRoles(Set<Role> roles) { this.roles = roles; }
-
-    // ---------- Реализация UserDetails ----------
 
     @Override
     public String getUsername() {
