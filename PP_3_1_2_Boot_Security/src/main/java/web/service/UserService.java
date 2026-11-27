@@ -1,6 +1,5 @@
 package web.service;
 
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.transaction.annotation.Transactional;
 import web.model.Role;
 import web.model.User;
@@ -17,7 +16,7 @@ public interface UserService {
 
     @Transactional(readOnly = true)
     User getUserById(long id);
-
+    @Transactional(readOnly = true)
     List<User> getAllUsers();
 
     @Transactional
