@@ -28,7 +28,7 @@ public class DataInitializer implements CommandLineRunner {
     @Override
     public void run(String... args) {
         Role adminRole = createRoleIfNotExists("ROLE_ADMIN");
-        Role userRole  = createRoleIfNotExists("ROLE_USER");
+        Role userRole = createRoleIfNotExists("ROLE_USER");
 
         if (userRepository.findByMail("admin@example.com").isEmpty()) {
             User admin = new User(

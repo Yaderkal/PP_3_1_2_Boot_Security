@@ -4,10 +4,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import java.awt.Desktop;
+import java.awt.*;
 import java.net.URI;
 
 @SpringBootApplication
@@ -25,7 +23,7 @@ public class Main {
                 Desktop.getDesktop().browse(new URI("http://localhost:8080/login"));
                 System.out.println("Браузер открыт по адресу: http://localhost:8080/login");
             } else {
-                System.out.println("Перейдите по ссылке: http://localhost:8080/login" );
+                System.out.println("Перейдите по ссылке: http://localhost:8080/login");
                 System.out.println("Дефолтный админ admin@example.com");
                 System.out.println("                admin");
             }

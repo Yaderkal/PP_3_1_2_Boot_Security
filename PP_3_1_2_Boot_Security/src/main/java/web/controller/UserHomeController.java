@@ -5,8 +5,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import web.Dto.UserDto;
-import web.repository.UserRepository;
 import web.model.User;
+import web.repository.UserRepository;
 
 @RestController
 @RequestMapping("/user/api")

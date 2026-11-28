@@ -4,24 +4,45 @@
     <meta charset="UTF-8">
     <title>Редактирование пользователя</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             padding: 20px;
         }
+
         .container {
             max-width: 600px;
             margin: 0 auto;
             background: white;
             border-radius: 15px;
             padding: 30px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
         }
-        h1 { color: #333; margin-bottom: 30px; text-align: center; }
-        .form-group { margin-bottom: 20px; }
-        label { display: block; margin-bottom: 5px; color: #333; font-weight: 600; }
+
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+            font-weight: 600;
+        }
+
         input[type=text], input[type=email], input[type=password] {
             width: 100%;
             padding: 10px;
@@ -30,10 +51,31 @@
             font-size: 14px;
             transition: border-color 0.3s;
         }
-        input:focus { outline: none; border-color: #667eea; }
-        .readonly { background: #e9ecef; cursor: not-allowed; }
-        .checkbox-group { display: flex; gap: 20px; padding: 10px 0; }
-        .checkbox-group label { display: flex; align-items: center; gap: 6px; font-weight: normal; cursor: pointer; }
+
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .readonly {
+            background: #e9ecef;
+            cursor: not-allowed;
+        }
+
+        .checkbox-group {
+            display: flex;
+            gap: 20px;
+            padding: 10px 0;
+        }
+
+        .checkbox-group label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: normal;
+            cursor: pointer;
+        }
+
         .btn {
             display: inline-block;
             padding: 12px 30px;
@@ -46,63 +88,80 @@
             transition: all 0.3s;
             margin: 5px;
         }
-        .btn:hover { background: #5566d6; transform: translateY(-2px); }
-        .btn-secondary { background: #6c757d; }
-        .btn-secondary:hover { background: #5a6268; }
-        .btn-group { display: flex; gap: 10px; margin-top: 20px; justify-content: center; }
+
+        .btn:hover {
+            background: #5566d6;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            justify-content: center;
+        }
     </style>
 </head>
 <body>
 <div class="container">
     <h1>Редактирование пользователя</h1>
 
-    <form th:action="@{/admin/update}" method="post">
-        <input type="hidden" name="id" th:value="${user.id}"/>
+    <form method="post" th:action="@{/admin/update}">
+        <input name="id" th:value="${user.id}" type="hidden"/>
 
         <div class="form-group">
             <label for="idField">ID:</label>
-            <input type="text" id="idField" th:value="${user.id}" class="readonly" readonly/>
+            <input class="readonly" id="idField" readonly th:value="${user.id}" type="text"/>
         </div>
 
         <div class="form-group">
             <label for="name">Имя:</label>
-            <input type="text" id="name" name="name" th:value="${user.name}" placeholder="Введите имя" required/>
+            <input id="name" name="name" placeholder="Введите имя" required th:value="${user.name}" type="text"/>
         </div>
 
         <div class="form-group">
             <label for="middleName">Отчество:</label>
-            <input type="text" id="middleName" name="middleName" th:value="${user.middleName}" placeholder="Введите отчество"/>
+            <input id="middleName" name="middleName" placeholder="Введите отчество" th:value="${user.middleName}"
+                   type="text"/>
         </div>
 
         <div class="form-group">
             <label for="surName">Фамилия:</label>
-            <input type="text" id="surName" name="surName" th:value="${user.surName}" placeholder="Введите фамилию"/>
+            <input id="surName" name="surName" placeholder="Введите фамилию" th:value="${user.surName}" type="text"/>
         </div>
 
         <div class="form-group">
             <label for="mail">Email:</label>
-            <input type="email" id="mail" name="mail" th:value="${user.mail}" placeholder="name@domain.com" required/>
+            <input id="mail" name="mail" placeholder="name@domain.com" required th:value="${user.mail}" type="email"/>
         </div>
 
         <div class="form-group">
             <label for="password">Новый пароль (оставьте пустым, чтобы не менять):</label>
-            <input type="password" id="password" name="password" placeholder="••••••"/>
+            <input id="password" name="password" placeholder="••••••" type="password"/>
         </div>
 
         <div class="form-group">
             <label>Роли:</label>
             <div class="checkbox-group">
                 <label th:each="r : ${allRoles}">
-                    <input type="checkbox" name="roles" th:value="${r.id}"
-                           th:checked="${#lists.contains(user.roles, r)}"/>
+                    <input name="roles" th:checked="${#lists.contains(user.roles, r)}" th:value="${r.id}"
+                           type="checkbox"/>
                     <span th:text="${r.name}">ROLE_USER</span>
                 </label>
             </div>
         </div>
 
         <div class="btn-group">
-            <button type="submit" class="btn">Обновить</button>
-            <a th:href="@{/admin}" class="btn btn-secondary">Отмена</a>
+            <button class="btn" type="submit">Обновить</button>
+            <a class="btn btn-secondary" th:href="@{/admin}">Отмена</a>
         </div>
 
     </form>

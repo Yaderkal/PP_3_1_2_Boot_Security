@@ -1,16 +1,17 @@
 package web.service;
 
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.transaction.annotation.Transactional;
 import web.model.Role;
 import web.model.User;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 public interface UserService {
     @Transactional
     void removeUserById(long id);
+
     @Transactional
     void saveUser(String name, String middleName, String surName,
                   String mail, String rawPassword, Set<Role> roles);
@@ -24,4 +25,6 @@ public interface UserService {
     void updateUser(Long id, String name, String middleName,
                     String surName, String mail, String rawPassword,
                     Set<Role> roles);
+
+    Optional<User> findByMail(String mail);
 }

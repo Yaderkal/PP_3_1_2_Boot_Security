@@ -9,4 +9,5 @@ public record UserRequest(
         String mail,
         String password,
         Set<Long> roleIds
-) {}
+) {
+}

@@ -9,6 +9,7 @@ import web.repository.UserRepository;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -48,6 +49,7 @@ public class UserServiceImpl implements UserService {
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
+
     @Override
     public void removeUserById(long id) {
         if (!userRepository.existsById(id)) {
@@ -73,5 +75,10 @@ public class UserServiceImpl implements UserService {
             user.setRoles(roles);
         }
         userRepository.save(user);
+    }
+
+    @Override
+    public Optional<User> findByMail(String mail) {
+        return userRepository.findByMail(mail);
     }
 }

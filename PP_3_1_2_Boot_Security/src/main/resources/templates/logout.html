@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:th="http://www.thymeleaf.org">
 <body>
-<div th:fragment="logoutBar" class="logout-bar">
+<div class="logout-bar" th:fragment="logoutBar">
     <span>
         Вы вошли как: <strong sec:authentication="name"></strong>
         <span> | Роли: </span>
@@ -10,8 +10,8 @@
             <span th:text="${auth.authority}">ROLE_USER</span><span th:if="${!stat.last}">, </span>
         </strong>
     </span>
-    <form th:action="@{/logout}" method="post" style="display:inline">
-        <button type="submit" class="logout-btn">Выйти</button>
+    <form method="post" style="display:inline" th:action="@{/logout}">
+        <button class="logout-btn" type="submit">Выйти</button>
     </form>
 </div>
 </body>
