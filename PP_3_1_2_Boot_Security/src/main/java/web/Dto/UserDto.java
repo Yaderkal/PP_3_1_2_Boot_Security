@@ -5,7 +5,6 @@ import web.model.User;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-// UserDto
 public record UserDto(Long id, String name, String middleName, String surName,
                       String mail, Set<RoleDto> roles) {
     public static UserDto from(User user) {

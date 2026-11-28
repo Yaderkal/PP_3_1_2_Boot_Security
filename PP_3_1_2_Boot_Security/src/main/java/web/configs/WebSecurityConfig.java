@@ -30,7 +30,7 @@ public class WebSecurityConfig {
                 .authorizeRequests()
                 .antMatchers("/registration").not().fullyAuthenticated()
                 .antMatchers("/admin/**").hasRole("ADMIN")
-                .antMatchers("/news").hasRole("USER")
+                .antMatchers("/user", "/user/api").authenticated()
                 .antMatchers("/", "/resources/**").permitAll()
                 .anyRequest().authenticated()
                 .and()

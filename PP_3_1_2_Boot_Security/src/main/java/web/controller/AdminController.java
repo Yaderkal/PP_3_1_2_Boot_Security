@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Set;
 
 @RestController
-@RequestMapping("/admin")
+@RequestMapping("/admin/api")
 public class AdminController {
 
     private final UserService userService;
@@ -29,15 +29,14 @@ public class AdminController {
         this.userService = userService;
     }
 
-    // GET /admin — список пользователей
-    @GetMapping
+
+    @GetMapping("/users")
     public List<UserDto> getAllUsers() {
         return userService.getAllUsers().stream()
                 .map(UserDto::from)
                 .toList();
     }
 
-    // GET /admin/roles — список ролей для выпадающего списка
     @GetMapping("/roles")
     public List<RoleDto> getAllRoles() {
         return roleRepository.findAll().stream()
@@ -45,7 +44,7 @@ public class AdminController {
                 .toList();
     }
 
-    // GET /admin/{id} — один пользователь
+
     @GetMapping("/{id}")
     public ResponseEntity<UserDto> getUser(@PathVariable Long id) {
         User user = userService.getUserById(id);
@@ -54,18 +53,20 @@ public class AdminController {
                 : ResponseEntity.notFound().build();
     }
 
-    // POST /admin — создание
-    @PostMapping
+
+    @PostMapping("/users")
     public ResponseEntity<UserDto> createUser(@RequestBody UserRequest request) {
         Set<Role> roles = new HashSet<>(roleRepository.findAllById(request.roleIds()));
-        User user = new User(request.name(), request.middleName(), request.surName(),
+        userService.saveUser(request.name(), request.middleName(), request.surName(),
                 request.mail(), request.password(), roles);
-        userService.saveUser(user.getName(), user.getMiddleName(), user.getSurName(),
-                user.getMail(), user.getPassword(), user.getRoles());
-        return ResponseEntity.status(HttpStatus.CREATED).body(UserDto.from(user));
+        User saved = userService.getAllUsers().stream()
+                .filter(u -> u.getMail().equals(request.mail()))
+                .findFirst()
+                .orElseThrow();
+        return ResponseEntity.status(HttpStatus.CREATED).body(UserDto.from(saved));
     }
 
-    // PUT /admin/{id} — обновление
+
     @PutMapping("/{id}")
     public ResponseEntity<UserDto> updateUser(@PathVariable Long id,
                                               @RequestBody UserRequest request) {
@@ -76,7 +77,7 @@ public class AdminController {
         return ResponseEntity.ok(UserDto.from(updated));
     }
 
-    // DELETE /admin/{id} — удаление
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         userService.removeUserById(id);
