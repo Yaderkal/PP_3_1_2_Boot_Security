@@ -18,13 +18,13 @@ public interface UserService {
 
     @Transactional(readOnly = true)
     User getUserById(long id);
-
+    @Transactional(readOnly = true)
     List<User> getAllUsers();
 
     @Transactional
     void updateUser(Long id, String name, String middleName,
                     String surName, String mail, String rawPassword,
                     Set<Role> roles);
-
+    @Transactional(readOnly = true)
     Optional<User> findByMail(String mail);
 }

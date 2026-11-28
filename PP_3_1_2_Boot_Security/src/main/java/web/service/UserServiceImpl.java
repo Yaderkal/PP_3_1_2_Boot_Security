@@ -13,7 +13,6 @@ import java.util.Optional;
 import java.util.Set;
 
 @Service
-@Transactional
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
@@ -25,6 +24,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void saveUser(String name, String middleName, String surName,
                          String mail, String rawPassword, Set<Role> roles) {
         User user = new User();
@@ -37,8 +37,8 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
-    @Transactional(readOnly = true)
     @Override
+    @Transactional(readOnly = true)
     public User getUserById(long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Пользователь с id=" + id + " не найден"));
@@ -51,6 +51,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void removeUserById(long id) {
         if (!userRepository.existsById(id)) {
             throw new EntityNotFoundException("Пользователь с id=" + id + " не найден");
@@ -59,6 +60,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void updateUser(Long id, String name, String middleName,
                            String surName, String mail, String rawPassword,
                            Set<Role> roles) {
@@ -78,6 +80,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<User> findByMail(String mail) {
         return userRepository.findByMail(mail);
     }
